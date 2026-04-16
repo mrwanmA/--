@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>كومندا | المنصة العالمية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: #0a0c10; font-family: 'Cairo', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .phone { width: 100%; max-width: 400px; height: 700px; background: #181a20; border-radius: 44px; overflow: hidden; position: relative; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
+        .status-bar { background: #0f1117; padding: 12px 20px; display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; color: #fff; }
+        .header { background: #0f1117; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #252b3d; }
+        .logo h1 { font-size: 1.5rem; background: linear-gradient(45deg, #f5b042, #ffd966); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .wallet-btn { background: #252b3d; padding: 6px 12px; border-radius: 30px; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: bold; cursor: pointer; }
+        .bottom-nav { background: #0f1117; padding: 10px 20px; display: flex; justify-content: space-around; border-top: 1px solid #252b3d; margin-top: auto; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #6c7293; cursor: pointer; transition: 0.2s; font-size: 12px; }
+        .nav-item i { font-size: 22px; }
+        .nav-item.active { color: #ffd966; }
+        .main-content { flex: 1; overflow-y: auto; padding: 16px; scroll-behavior: smooth; }
+        .main-content::-webkit-scrollbar { width: 4px; }
+        .main-content::-webkit-scrollbar-track { background: #252b3d; border-radius: 10px; }
+        .main-content::-webkit-scrollbar-thumb { background: #2c7a5e; border-radius: 10px; }
+        .card { background: #1e2433; border-radius: 24px; padding: 16px; margin-bottom: 16px; }
+        .balance-card { background: linear-gradient(135deg, #1e4d3b, #0f2a21); border-radius: 28px; padding: 20px; text-align: center; margin-bottom: 20px; }
+        .balance-coins { font-size: 42px; font-weight: 800; color: #ffd966; }
+        .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .product-card { background: #252b3d; border-radius: 20px; padding: 16px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .product-card:active { transform: scale(0.97); }
+        .product-icon { font-size: 48px; margin-bottom: 8px; }
+        .product-name { font-weight: 700; font-size: 14px; }
+        .product-price { color: #ffd966; font-weight: bold; margin: 6px 0; }
+        .btn-sm { background: #2c7a5e; border: none; color: white; padding: 8px; border-radius: 30px; width: 100%; cursor: pointer; font-weight: bold; margin-top: 8px; }
+        .cart-item { background: #252b3d; border-radius: 16px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .cart-total { background: #2c7a5e; border-radius: 20px; padding: 15px; margin-top: 10px; text-align: center; }
+        .btn { background: #2c7a5e; border: none; color: white; padding: 14px; border-radius: 40px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 16px; }
+        .btn-danger { background: #a53f3f; }
+        .btn-secondary { background: #3a4050; }
+        input, select, textarea { width: 100%; padding: 14px 16px; margin: 8px 0; border-radius: 30px; background: #252b3d; border: none; color: white; font-size: 16px; }
+        .password-group { position: relative; }
+        .toggle-password { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #aaa; }
+        .invoice-item, .chat-message { background: #0f1117; border-right: 3px solid #ffd966; border-radius: 16px; padding: 12px; margin-bottom: 8px; }
+        .admin-request, .chat-contact { background: #252b3d; padding: 12px; border-radius: 16px; margin-bottom: 10px; cursor: pointer; }
+        .badge { background: #e6a017; color: #1a1f2e; padding: 2px 8px; border-radius: 30px; font-size: 11px; display: inline-block; }
+        .text-center { text-align: center; }
+        .small-text { font-size: 12px; color: #888; margin-top: 6px; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #2c7a5e; color: white; padding: 10px 20px; border-radius: 40px; z-index: 2000; font-weight: bold; font-size: 14px; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+        .modal-content { background: #1a1f2e; border-radius: 28px; padding: 24px; width: 85%; max-width: 320px; }
+        .chat-messages { max-height: 300px; overflow-y: auto; margin-bottom: 12px; display: flex; flex-direction: column; }
+        .message-sent { background: #2c7a5e; color: white; padding: 10px; border-radius: 20px; margin: 5px 0; max-width: 80%; align-self: flex-end; text-align: right; }
+        .message-received { background: #252b3d; color: white; padding: 10px; border-radius: 20px; margin: 5px 0; max-width: 80%; align-self: flex-start; text-align: right; }
+        .chat-input { display: flex; gap: 8px; margin-top: 12px; }
+        .chat-input input { flex: 1; margin: 0; }
+        .chat-input button { width: auto; padding: 12px 20px; margin: 0; }
+    </style>
+</head>
+<body>
+<div class="phone">
+    <div class="status-bar"><span>9:41</span><span><i class="fas fa-signal"></i> <i class="fas fa-battery-full"></i></span></div>
+    <div class="header"><div class="logo"><h1>𝑪𝑶𝑴𝑨𝑵𝑫𝑨</h1></div><div class="wallet-btn" id="walletBtn"><i class="fas fa-coins"></i> <span id="walletCoins">0</span></div></div>
+    <div class="main-content" id="mainContent"></div>
+    <div class="bottom-nav" id="bottomNav"></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyApfsJ1FbcIppHqcR9R2ysdBsHEKavAWPg",
+        authDomain: "my-store-3b685.firebaseapp.com",
+        projectId: "my-store-3b685",
+        storageBucket: "my-store-3b685.firebasestorage.app",
+        messagingSenderId: "304595038689",
+        appId: "1:304595038689:web:717be44f55ddc0d05222a0"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    const COIN_PRICE = 5;
+    const ADMIN_PHONE = "01044014275";
+
+    let currentUser = null;
+    let allProducts = [];
+    let allUsers = [];
+    let rechargeRequests = [];
+    let purchases = [];
+    let allChats = [];
+    let cart = [];
+
+    function showToast(msg, isError = false) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.style.background = isError ? '#a53f3f' : '#2c7a5e';
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2500);
+    }
+
+    function updateWalletUI() {
+        if (currentUser) document.getElementById("walletCoins").innerText = currentUser.wallet || 0;
+    }
+
+    async function createAdminIfNotExists() {
+        const adminEmail = "admin@comanda.com";
+        const adminPassword = "Admin@123";
+        try {
+            await auth.signInWithEmailAndPassword(adminEmail, adminPassword);
+        } catch(e) {
+            if (e.code === 'auth/user-not-found') {
+                try {
+                    const cred = await auth.createUserWithEmailAndPassword(adminEmail, adminPassword);
+                    const uid = cred.user.uid;
+                    await db.ref('users/' + uid).set({
+                        id: uid, name: "المدير العام", email: adminEmail, role: "admin", wallet: 100000, phone: ADMIN_PHONE
+                    });
+                    await auth.signOut();
+                } catch(err) { console.error(err); }
+            }
+        }
+    }
+    createAdminIfNotExists();
+
+    db.ref('products').on('value', (snap) => { allProducts = snap.val() ? Object.values(snap.val()) : []; if (document.querySelector('.nav-item.active')?.dataset.page === 'shop') renderShop(); });
+    db.ref('users').on('value', (snap) => {
+        const data = snap.val();
+        allUsers = data ? Object.values(data) : [];
+        if (currentUser) {
+            const updated = allUsers.find(u => u.id === currentUser.id);
+            if (updated) { currentUser = updated; updateWalletUI(); }
+        }
+    });
+    db.ref('rechargeRequests').on('value', (snap) => { rechargeRequests = snap.val() ? Object.values(snap.val()) : []; if (currentUser?.role === 'admin' && document.querySelector('.nav-item.active')?.dataset.page === 'admin') renderAdminPanel(); });
+    db.ref('purchases').on('value', (snap) => { purchases = snap.val() ? Object.values(snap.val()) : []; if (document.querySelector('.nav-item.active')?.dataset.page === 'invoices') renderInvoices(); });
+    db.ref('chats').on('value', (snap) => { allChats = snap.val() ? Object.values(snap.val()) : []; if (document.querySelector('.nav-item.active')?.dataset.page === 'messages') renderChatsList(); });
+
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            const snapshot = await db.ref('users/' + user.uid).once('value');
+            currentUser = snapshot.val();
+            if (!currentUser) { await auth.signOut(); renderLogin(); return; }
+            updateWalletUI();
+            renderMainApp();
+        } else { renderLogin(); }
+    });
+
+    function renderLogin() {
+        document.getElementById("mainContent").innerHTML = `
+            <div class="card">
+                <div class="text-center" style="margin-bottom: 20px;">
+                    <h1 style="background: linear-gradient(45deg, #f5b042, #ffd966); -webkit-background-clip: text; background-clip: text; color: transparent; font-size: 32px;">𝑪𝑶𝑴𝑨𝑵𝑫𝑨</h1>
+                    <p>منصة عالمية آمنة</p>
+                </div>
+                <input type="email" id="loginEmail" placeholder="البريد الإلكتروني">
+                <div class="password-group">
+                    <input type="password" id="loginPassword" placeholder="كلمة المرور">
+                    <i class="fas fa-eye toggle-password" onclick="togglePassword('loginPassword')"></i>
+                </div>
+                <button class="btn" onclick="handleLogin()">دخول</button>
+                <button class="btn-secondary" onclick="showRegister()">إنشاء حساب جديد</button>
+            </div>
+        `;
+        document.getElementById("bottomNav").innerHTML = "";
+    }
+
+    window.togglePassword = (id) => { const input = document.getElementById(id); input.type = input.type === "password" ? "text" : "password"; };
+    window.handleLogin = async () => {
+        const email = document.getElementById("loginEmail").value;
+        const password = document.getElementById("loginPassword").value;
+        try { await auth.signInWithEmailAndPassword(email, password); } 
+        catch(e) { showToast("بيانات غير صحيحة", true); }
+    };
+    window.showRegister = () => {
+        document.getElementById("mainContent").innerHTML = `
+            <div class="card">
+                <h2 class="text-center">📝 حساب جديد</h2>
+                <input type="text" id="regName" placeholder="الاسم الكامل">
+                <input type="email" id="regEmail" placeholder="البريد الإلكتروني">
+                <div class="password-group">
+                    <input type="password" id="regPassword" placeholder="كلمة المرور">
+                    <i class="fas fa-eye toggle-password" onclick="togglePassword('regPassword')"></i>
+                </div>
+                <select id="regRole"><option value="buyer">مشتري</option><option value="seller">تاجر</option></select>
+                <button class="btn" onclick="handleRegister()">تسجيل</button>
+                <button class="btn-secondary" onclick="renderLogin()">عودة</button>
+            </div>
+        `;
+    };
+    window.handleRegister = async () => {
+        const name = document.getElementById("regName").value;
+        const email = document.getElementById("regEmail").value;
+        const password = document.getElementById("regPassword").value;
+        const role = document.getElementById("regRole").value;
+        if (!name || !email || !password) { showToast("املأ جميع الحقول", true); return; }
+        try {
+            const cred = await auth.createUserWithEmailAndPassword(email, password);
+            const uid = cred.user.uid;
+            await db.ref('users/' + uid).set({ id: uid, name, email, role, wallet: 0, phone: "" });
+            await auth.signOut();
+            showToast("تم التسجيل، سجل دخول الآن");
+            renderLogin();
+        } catch(e) { showToast(e.message, true); }
+    };
+
+    function renderMainApp() {
+        const navItems = [
+            { icon: "fa-store", label: "السوق", page: "shop" },
+            { icon: "fa-shopping-cart", label: "السلة", page: "cart" },
+            { icon: "fa-comments", label: "المحادثات", page: "messages" },
+            { icon: "fa-file-invoice", label: "فواتير", page: "invoices" },
+            { icon: "fa-user", label: "حسابي", page: "profile" }
+        ];
+        if (currentUser.role === "seller") navItems.splice(3, 0, { icon: "fa-box", label: "منتجاتي", page: "myProducts" });
+        if (currentUser.role === "admin") navItems.splice(3, 0, { icon: "fa-crown", label: "إدارة", page: "admin" });
+        
+        document.getElementById("bottomNav").innerHTML = navItems.map(item => `<div class="nav-item ${item.page === 'shop' ? 'active' : ''}" data-page="${item.page}"><i class="fas ${item.icon}"></i><span>${item.label}</span></div>`).join('');
+        document.querySelectorAll('.nav-item').forEach(nav => {
+            nav.onclick = () => {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                nav.classList.add('active');
+                const page = nav.dataset.page;
+                if (page === 'shop') renderShop();
+                else if (page === 'cart') renderCart();
+                else if (page === 'messages') renderChatsList();
+                else if (page === 'invoices') renderInvoices();
+                else if (page === 'profile') renderProfile();
+                else if (page === 'myProducts') renderMyProducts();
+                else if (page === 'admin') renderAdminPanel();
+            };
+        });
+        renderShop();
+    }
+
+    function renderShop() {
+        const container = document.getElementById("mainContent");
+        if (allProducts.length === 0) { container.innerHTML = `<div class="card text-center">✨ لا توجد منتجات حالياً</div>`; return; }
+        container.innerHTML = `<div class="products-grid" id="productsGrid"></div>`;
+        const grid = document.getElementById("productsGrid");
+        allProducts.forEach(p => {
+            grid.innerHTML += `<div class="product-card" onclick="addToCart('${p.id}')"><div class="product-icon">${p.image || '📦'}</div><div class="product-name">${p.name}</div><div class="product-price">${p.price} عملة</div><div class="small-text">≈ ${p.price * COIN_PRICE} جنيه</div><button class="btn-sm">➕ أضف للسلة</button></div>`;
+        });
+    }
+
+    window.addToCart = (productId) => {
+        const product = allProducts.find(p => p.id === productId);
+        if (!product) return;
+        const existing = cart.find(i => i.productId === productId);
+        if (existing) existing.quantity++;
+        else cart.push({ productId, quantity: 1 });
+        showToast(`✓ ${product.name} أضيف للسلة`);
+    };
+
+    function renderCart() {
+        const container = document.getElementById("mainContent");
+        if (cart.length === 0) { container.innerHTML = `<div class="card text-center">🛒 السلة فارغة</div>`; return; }
+        let total = 0, itemsHtml = "";
+        cart.forEach(item => {
+            const product = allProducts.find(p => p.id === item.productId);
+            if (product) {
+                const itemTotal = product.price * item.quantity;
+                total += itemTotal;
+                itemsHtml += `<div class="cart-item"><div><span style="font-size:24px;">${product.image}</span> ${product.name} x${item.quantity}</div><div>${itemTotal} عملة</div></div>`;
+            }
+        });
+        container.innerHTML = `<div class="card">${itemsHtml}<div class="cart-total"><strong>الإجمالي: ${total} عملة</strong><br><small>≈ ${total * COIN_PRICE} جنيه</small></div><button class="btn" onclick="checkout()">💳 إتمام الشراء</button></div>`;
+    }
+
+    window.checkout = async () => {
+        let total = 0;
+        cart.forEach(item => { const p = allProducts.find(p => p.id === item.productId); if (p) total += p.price * item.quantity; });
+        if (currentUser.wallet >= total && total > 0) {
+            for (let item of cart) {
+                const product = allProducts.find(p => p.id === item.productId);
+                if (product) {
+                    currentUser.wallet -= product.price * item.quantity;
+                    await db.ref('users/' + currentUser.id).update({ wallet: currentUser.wallet });
+                    await db.ref('purchases/' + Date.now() + Math.random()).set({ id: Date.now() + Math.random(), buyerId: currentUser.id, productId: product.id, productName: product.name, coins: product.price * item.quantity, date: new Date().toISOString() });
+                    const chatId = `${currentUser.id}_${product.sellerId}_${product.id}`;
+                    await db.ref('chats/' + chatId).set({ id: chatId, productId: product.id, productName: product.name, buyerId: currentUser.id, sellerId: product.sellerId, messages: [], lastUpdate: Date.now() });
+                }
+            }
+            cart = [];
+            updateWalletUI();
+            showToast("✅ تم الشراء بنجاح!");
+            renderShop();
+            document.querySelector('.nav-item[data-page="shop"]')?.click();
+        } else if (total === 0) showToast("السلة فارغة", true);
+        else showToast("❌ رصيد غير كافٍ", true);
+    };
+
+    function renderChatsList() {
+        let userChats = allChats.filter(c => c.buyerId === currentUser?.id || c.sellerId === currentUser?.id);
+        if (userChats.length === 0) {
+            document.getElementById("mainContent").innerHTML = `<div class="card text-center">💬 لا توجد محادثات بعد</div>`;
+            return;
+        }
+        let html = `<div class="card"><h3>💬 محادثاتي</h3>`;
+        for (let chat of userChats) {
+            const otherId = chat.buyerId === currentUser.id ? chat.sellerId : chat.buyerId;
+            const otherUser = allUsers.find(u => u.id === otherId);
+            html += `<div class="chat-contact" onclick="openChat('${chat.id}')">
+                        <div class="flex-between">
+                            <div><strong>${otherUser?.name || 'مستخدم'}</strong></div>
+                            <div class="small-text">${chat.productName}</div>
+                        </div>
+                        <div class="small-text">آخر رسالة: ${chat.messages?.length > 0 ? chat.messages[chat.messages.length-1].text.substring(0, 30) : 'ابدأ المحادثة'}</div>
+                    </div>`;
+        }
+        html += `</div>`;
+        document.getElementById("mainContent").innerHTML = html;
+    }
+
+    window.openChat = async (chatId) => {
+        const chatRef = db.ref('chats/' + chatId);
+        const snap = await chatRef.once('value');
+        let chat = snap.val();
+        if (!chat) return;
+        
+        const otherId = chat.buyerId === currentUser.id ? chat.sellerId : chat.buyerId;
+        const otherUser = allUsers.find(u => u.id === otherId);
+        
+        document.getElementById("mainContent").innerHTML = `
+            <div class="card">
+                <div class="flex-between">
+                    <h3>💬 محادثة مع ${otherUser?.name || 'مستخدم'}</h3>
+                    <button class="btn-sm" onclick="renderChatsList()" style="width:auto; padding:5px 12px;">↩️ رجوع</button>
+                </div>
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input">
+                    <input type="text" id="msgInput" placeholder="اكتب رسالة...">
+                    <button class="btn-sm" onclick="sendMessage('${chatId}')">إرسال</button>
+                </div>
+            </div>
+        `;
+        
+        const renderMessages = () => {
+            const container = document.getElementById("chatMessages");
+            if (!container) return;
+            container.innerHTML = (chat.messages || []).map(m => `
+                <div class="${m.senderId === currentUser.id ? 'message-sent' : 'message-received'}">
+                    ${m.text}<br><span class="small-text">${new Date(m.time).toLocaleTimeString()}</span>
+                </div>
+            `).join('');
+            container.scrollTop = container.scrollHeight;
+        };
+        
+        renderMessages();
+        chatRef.on('value', (snap) => {
+            if (snap.val()) { chat = snap.val(); renderMessages(); }
+        });
+    };
+    
+    window.sendMessage = async (chatId) => {
+        const input = document.getElementById("msgInput");
+        if (!input.value.trim()) return;
+        const chatRef = db.ref('chats/' + chatId);
+        const snap = await chatRef.once('value');
+        const chat = snap.val();
+        if (chat) {
+            const newMsg = { senderId: currentUser.id, text: input.value, time: Date.now() };
+            chat.messages = chat.messages || [];
+            chat.messages.push(newMsg);
+            await chatRef.update({ messages: chat.messages, lastUpdate: Date.now() });
+            input.value = "";
+        }
+    };
+
+    window.showRechargeModal = () => {
+        const modal = document.createElement('div'); modal.className = 'modal';
+        modal.innerHTML = `<div class="modal-content"><h3 class="text-center">💰 شراء عملات</h3><p class="text-center">1 عملة = ${COIN_PRICE} جنيه</p><div style="background:#252b3d;padding:12px;border-radius:16px;margin:10px 0;text-align:center;"><i class="fab fa-vodafone"></i> فودافون كاش: <strong>${ADMIN_PHONE}</strong></div><input type="number" id="coinsAmount" placeholder="عدد العملات" min="1"><div id="totalPrice" class="text-center" style="margin:8px 0;">الإجمالي: 0 جنيه</div><button class="btn" id="confirmRecharge">تأكيد الدفع</button><button class="btn-secondary" id="closeModal">إلغاء</button></div>`;
+        document.body.appendChild(modal);
+        const coinsInput = modal.querySelector('#coinsAmount');
+        const totalSpan = modal.querySelector('#totalPrice');
+        coinsInput.oninput = () => { const c = parseInt(coinsInput.value) || 0; totalSpan.innerText = `الإجمالي: ${c * COIN_PRICE} جنيه`; };
+        modal.querySelector('#confirmRecharge').onclick = async () => {
+            const coins = parseInt(coinsInput.value);
+            if (!coins || coins <= 0) { showToast("أدخل عدد صحيح", true); return; }
+            const request = { id: Date.now() + Math.random(), userId: currentUser.id, userName: currentUser.name, coins, amount: coins * COIN_PRICE, status: "pending", date: new Date().toISOString() };
+            await db.ref('rechargeRequests/' + request.id).set(request);
+            modal.remove();
+            showToast(`📩 تم إرسال طلب ${coins} عملة. سيتم إضافة الرصيد بعد تأكيد الدفع.`);
+        };
+        modal.querySelector('#closeModal').onclick = () => modal.remove();
+    };
+
+    window.approveRequest = async (requestId) => {
+        const req = rechargeRequests.find(r => r.id === requestId);
+        if (req && req.status === "pending") {
+            req.status = "completed";
+            await db.ref('rechargeRequests/' + requestId).update({ status: "completed" });
+            const userRef = db.ref('users/' + req.userId);
+            const snap = await userRef.once('value');
+            const user = snap.val();
+            if (user) { user.wallet += req.coins; await userRef.update({ wallet: user.wallet }); }
+            showToast(`✅ تمت إضافة ${req.coins} عملة للمستخدم`);
+            if (currentUser?.role === 'admin') renderAdminPanel();
+        }
+    };
+
+    function renderAdminPanel() {
+        const pending = rechargeRequests.filter(r => r.status === "pending");
+        const usersList = allUsers.filter(u => u.role !== "admin");
+        const totalCoins = allUsers.reduce((sum, u) => sum + (u.wallet || 0), 0);
+        const totalMoney = totalCoins * COIN_PRICE;
+        
+        document.getElementById("mainContent").innerHTML = `
+            <div class="card"><h3><i class="fas fa-chart-line"></i> مراقبة النظام</h3>
+                <div class="flex-between"><span>💰 إجمالي العملات المتداولة:</span><span>${totalCoins} عملة</span></div>
+                <div class="flex-between"><span>💵 قيمتها بالجنيه:</span><span>${totalMoney} جنيه</span></div>
+                <div class="flex-between"><span>👥 عدد المستخدمين:</span><span>${usersList.length}</span></div>
+                <div class="flex-between"><span>🛒 عدد المشتريات:</span><span>${purchases.length}</span></div>
+            </div>
+            <div class="card"><h3><i class="fas fa-coins"></i> طلبات الشحن</h3><div style="background:#252b3d;padding:12px;border-radius:16px;margin:10px 0;"><i class="fab fa-vodafone"></i> فودافون كاش: <strong>${ADMIN_PHONE}</strong></div>
+            ${pending.length === 0 ? '<div class="small-text text-center">لا توجد طلبات</div>' : pending.map(r => `<div class="admin-request"><div><strong>${r.userName}</strong> يطلب ${r.coins} عملة</div><div>المبلغ: ${r.amount} جنيه</div><button class="btn-sm" onclick="approveRequest('${r.id}')">✅ تأكيد الدفع</button></div>`).join('')}
+            </div>
+            <div class="card"><h3><i class="fas fa-users"></i> المستخدمين</h3>${usersList.length === 0 ? '<div class="small-text text-center">لا يوجد مستخدمين</div>' : usersList.map(u => `<div class="admin-request flex-between"><div><strong>${u.name}</strong><br><span class="small-text">${u.role === 'seller' ? 'تاجر' : 'مشتري'} | رصيد: ${u.wallet}</span></div><button class="btn-sm" onclick="addCoinsToUser('${u.id}', 10)">➕ إضافة 10</button></div>`).join('')}</div>
+        `;
+    }
+
+    window.addCoinsToUser = async (userId, coins) => {
+        const userRef = db.ref('users/' + userId);
+        const snap = await userRef.once('value');
+        const user = snap.val();
+        if (user) { user.wallet += coins; await userRef.update({ wallet: user.wallet }); showToast(`تمت إضافة ${coins} عملة`); renderAdminPanel(); }
+    };
+
+    function renderMyProducts() {
+        const myProducts = allProducts.filter(p => p.sellerId === currentUser.id);
+        document.getElementById("mainContent").innerHTML = `
+            <div class="card"><h3>📦 منتجاتي</h3>${myProducts.length === 0 ? '<div class="small-text text-center">لا توجد منتجات</div>' : myProducts.map(p => `<div class="admin-request flex-between"><div><span style="font-size:24px;">${p.image}</span> ${p.name} - ${p.price} عملة</div><button class="btn-sm" onclick="deleteProduct('${p.id}')">🗑️ حذف</button></div>`).join('')}
+            <input type="text" id="prodName" placeholder="اسم المنتج"><input type="number" id="prodPrice" placeholder="السعر"><input type="text" id="prodImage" placeholder="رمز (مثل 👕)"><button class="btn" onclick="addProduct()">➕ إضافة</button></div>
+        `;
+    }
+
+    window.addProduct = async () => {
+        const name = document.getElementById("prodName")?.value;
+        const price = parseInt(document.getElementById("prodPrice")?.value);
+        const image = document.getElementById("prodImage")?.value || "📦";
+        if (!name || isNaN(price)) { showToast("أدخل بيانات صحيحة", true); return; }
+        const newProduct = { id: Date.now() + Math.random(), name, price, sellerId: currentUser.id, image };
+        await db.ref('products/' + newProduct.id).set(newProduct);
+        showToast("تمت الإضافة");
+        renderMyProducts();
+    };
+    window.deleteProduct = async (id) => { await db.ref('products/' + id).remove(); showToast("تم الحذف"); renderMyProducts(); };
+
+    function renderInvoices() {
+        const userPurchases = purchases.filter(p => p.buyerId === currentUser.id);
+        const userRequests = rechargeRequests.filter(r => r.userId === currentUser.id);
+        document.getElementById("mainContent").innerHTML = `<div class="card"><h3>📄 فواتيري</h3>${userPurchases.length === 0 && userRequests.length === 0 ? '<div class="small-text text-center">لا توجد فواتير</div>' : ''}
+        ${userPurchases.length ? '<h4>🛍️ مشترياتي</h4>' + userPurchases.map(p => `<div class="invoice-item">${p.productName} - ${p.coins} عملة<br><span class="small-text">${new Date(p.date).toLocaleString()}</span></div>`).join('') : ''}
+        ${userRequests.length ? '<h4>💰 عمليات الشحن</h4>' + userRequests.map(r => `<div class="invoice-item">${r.coins} عملة = ${r.amount} جنيه - الحالة: ${r.status === 'completed' ? '✅ مكتملة' :
